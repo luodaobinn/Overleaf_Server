@@ -29,9 +29,7 @@
 - 操作方法 ：在项目中点击 Share，打开并复制分享链接发送给协作者。
 
 > ⚠️ 注意事项：
-> 如果被分享的协作者
-> 不在
-> 实验室局域网内，请务必手动将链接中的内网 IP (
+> 如果被分享的协作者不在实验室局域网内，请务必手动将链接中的内网 IP (
 > 192.168.31.76:6086
 > ) 替换为公网 IP，否则对方无法打开。
 
@@ -84,7 +82,10 @@ toolkit-master/bin/stop && toolkit-master/bin/run-register stop
 
 > ⚠️ 回溯后权限修复：
 > 回溯完成后，必须执行以下命令修复数据目录权限，否则可能导致服务无法读写：
-> sudo chmod -R 777 ./toolkit-master/data
+
+ ```bash
+sudo chmod -R 777 ./toolkit-master/data
+```
 
 ### 四、 系统迁移指南 (Migration)
 
