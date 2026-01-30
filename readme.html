@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C518 Overleaf Server 使用说明</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            line-height: 1.6;
+            color: #24292e;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 40px;
+        }
+        h1, h2, h3 {
+            margin-top: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+        h1 {
+            font-size: 2em;
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+        }
+        h2 {
+            font-size: 1.5em;
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+            margin-top: 2em;
+        }
+        h3 {
+            font-size: 1.25em;
+        }
+        p {
+            margin-bottom: 16px;
+        }
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul, ol {
+            padding-left: 2em;
+            margin-bottom: 16px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        table th, table td {
+            padding: 6px 13px;
+            border: 1px solid #dfe2e5;
+        }
+        table tr:nth-child(2n) {
+            background-color: #f6f8fa;
+        }
+        code {
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            background-color: #fff5b1;
+            border-radius: 3px;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+        }
+        pre {
+            background-color: #f6f8fa;
+            border-radius: 3px;
+            font-size: 85%;
+            line-height: 1.45;
+            overflow: auto;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        .warning {
+            background-color: #fff5b1;
+            padding: 10px;
+            border-left: 5px solid #ffcc00;
+            margin-bottom: 16px;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #eaecef;
+            font-size: 0.8em;
+            color: #586069;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>C518 Overleaf Server 使用说明</h1>
+    <p>本文档旨在指导 C518 实验室成员如何使用 Overleaf Server，以及协助管理员进行系统的维护与管理。</p>
+
+    <h2>📖 用户指南 (User Guide)</h2>
+
+    <h3>一、 注册</h3>
+    <p>如果您是首次使用，请按照以下步骤完成注册：</p>
+    <ol>
+        <li>访问注册页面：<a href="http://192.168.31.76:6086" target="_blank">http://192.168.31.76:6086</a></li>
+        <li>点击页面 <strong>左下角</strong> 的 <code>注册</code> 链接。</li>
+        <li>填写您的邮箱地址。</li>
+        <li>进入链接设置您的登录密码。</li>
+    </ol>
+
+    <h3>二、 登录</h3>
+    <p>请根据您当前的网络环境选择合适的访问地址：</p>
+    <table>
+        <thead>
+            <tr>
+                <th>网络环境</th>
+                <th>访问地址 (URL)</th>
+                <th>备注</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>实验室局域网</strong></td>
+                <td><code>http://192.168.31.76:6086/login</code></td>
+                <td>速度最快，推荐使用</td>
+            </tr>
+            <tr>
+                <td><strong>公网 (外部访问)</strong></td>
+                <td><code>http://47.104.147.107:6086/login</code></td>
+                <td>2026.1.30 更新</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>三、 多人协作 (Project Sharing)</h3>
+    <p>目前系统仅支持 <strong>链接分享</strong> 模式进行协作。</p>
+    <ul>
+        <li><strong>操作方法</strong>：在项目中点击 Share，打开并复制分享链接发送给协作者。</li>
+    </ul>
+    <div class="warning">
+        <strong>⚠️ 注意事项：</strong><br>
+        如果被分享的协作者 <strong>不在</strong> 实验室局域网内，请务必手动将链接中的内网 IP (<code>192.168.31.76:6086</code>) 替换为公网 IP，否则对方无法打开。
+    </div>
+
+    <h2>🔧 管理员指南 (Administrator Guide)</h2>
+
+    <h3>一、 项目启停 (核心服务)</h3>
+    <p><strong>启动所有服务</strong> (Overleaf 主服务 + 注册后端)：</p>
+    <pre><code>toolkit-master/bin/up -d && toolkit-master/bin/run-register start</code></pre>
+
+    <p><strong>停止所有服务</strong>：</p>
+    <pre><code>toolkit-master/bin/stop && toolkit-master/bin/run-register stop</code></pre>
+
+    <h3>二、 注册功能管理</h3>
+    <p>本项目集成了一个额外的 Flask 后端 (<code>./app.py</code>) 以实现用户自助注册功能（原版仅支持管理员后台创建）。该模块通过 <code>toolkit-master/run-register</code> 脚本进行管理。</p>
+    <table>
+        <thead>
+            <tr>
+                <th>操作</th>
+                <th>命令</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>启动后端</strong></td>
+                <td><code>./toolkit-master/run-register start</code></td>
+            </tr>
+            <tr>
+                <td><strong>停止后端</strong></td>
+                <td><code>./toolkit-master/run-register stop</code></td>
+            </tr>
+            <tr>
+                <td><strong>重启后端</strong></td>
+                <td><code>./toolkit-master/run-register restart</code></td>
+            </tr>
+            <tr>
+                <td><strong>查看状态</strong></td>
+                <td><code>./toolkit-master/run-register status</code></td>
+            </tr>
+            <tr>
+                <td><strong>实时日志</strong></td>
+                <td><code>./toolkit-master/run-register logs</code></td>
+            </tr>
+            <tr>
+                <td><strong>查看帮助</strong></td>
+                <td><code>./toolkit-master/run-register help</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>三、 数据备份与回溯</h3>
+    <h4>1. 数据备份</h4>
+    <p>执行以下脚本，备份文件将生成在 <code>./backups</code> 目录下：</p>
+    <pre><code>./toolkit-master/backup.sh</code></pre>
+
+    <h4>2. 数据回溯</h4>
+    <p>执行回溯脚本。<strong>注意</strong>：需要在脚本文件中预先配置备份路径，并根据提示手动确认。</p>
+    <pre><code>./toolkit-master/restore.sh</code></pre>
+
+    <div class="warning">
+        <strong>⚠️ 回溯后权限修复：</strong><br>
+        回溯完成后，必须执行以下命令修复数据目录权限，否则可能导致服务无法读写：
+        <pre style="margin-top:10px; background-color: #fff;"><code>sudo chmod -R 777 ./toolkit-master/data</code></pre>
+    </div>
+
+    <h3>四、 系统迁移指南 (Migration)</h3>
+    <p><em>注：目前尚未实操验证，以下为建议流程。</em></p>
+    <p>若需将服务迁移至新服务器，建议按以下步骤操作：</p>
+    <ol>
+        <li><strong>镜像打包</strong>：<br>打包 Docker 镜像 <code>sharelatex/sharelatex:6.0.1-ext-v3.4-with-texlive-full</code>（此镜像已包含 Overleaf 社区版扩展批注功能及完整 TeXLive 包）。</li>
+        <li><strong>数据备份</strong>：<br>使用上述“备份功能”对当前数据进行全量备份。</li>
+        <li><strong>项目迁移</strong>：<br>打包并传输整个 <code>Overleaf_Server</code> 项目目录至新服务器。</li>
+        <li><strong>数据恢复</strong>：<br>在新服务器上执行“回溯功能”加载数据。</li>
+        <li><strong>配置更新</strong>：<br>启动项目前，务必检查并修改以下文件中的 IP 和端口配置：
+            <ul>
+                <li><code>./toolkit-master/lib/docker-compose.base.yml</code></li>
+                <li><code>./app.py</code></li>
+            </ul>
+        </li>
+        <li><strong>启动服务</strong>：<br>按照“项目启动”步骤拉起服务。</li>
+    </ol>
+
+    <div class="footer">
+        Generated by Gemini Enterprise | 2026.1.30
+    </div>
+
+</body>
+</html>
