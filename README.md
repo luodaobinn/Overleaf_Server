@@ -101,3 +101,55 @@ sudo chmod -R 777 ./toolkit-master/data
 4. 数据恢复 ： 在新服务器上执行“回溯功能”加载数据。
 5. 配置更新 ： 启动项目前，务必检查并修改以下文件中的 IP 和端口配置： ./toolkit-master/lib/docker-compose.base.yml ./app.py
 6. 启动服务 ： 按照“项目启动”步骤拉起服务。
+
+### 五、Systemd 服务常用操作指南（启动/停止/查看日志）
+
+注：目前已经配置服务的开机自启、报错重启
+
+1. 日志排查（实时）
+```bash
+journalctl -u frpc -f 
+```
+```bash
+journalctl -u overleaf -f
+```
+
+3. 启动服务
+```bash
+sudo systemctl start frpc
+```
+```bash
+sudo systemctl start overleaf
+```
+5. 停止服务
+```bash
+sudo systemctl stop frpc
+```
+```bash
+sudo systemctl stop overleaf
+```
+6. 重启服务
+```bash
+sudo systemctl restart frpc
+```
+```bash
+sudo systemctl restart overleaf
+```
+7. 设置开机自启（目前已设置）
+```bash
+sudo systemctl enable frpc
+```
+```bash
+sudo systemctl enable overleaf
+```
+8. 取消开机自启
+```bash
+sudo systemctl disable frpc
+```
+```bash
+sudo systemctl disable overleaf
+```
+9. 重载systemd配置（修改启动配置后必须执行）
+```bash
+sudo systemctl daemon-reload
+```
